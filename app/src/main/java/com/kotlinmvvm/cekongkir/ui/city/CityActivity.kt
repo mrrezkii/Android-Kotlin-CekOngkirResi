@@ -1,11 +1,14 @@
 package com.kotlinmvvm.cekongkir.ui.city
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.network.ApiService
+import com.kotlinmvvm.cekongkir.network.Resource
+import timber.log.Timber
 
 class CityActivity : AppCompatActivity() {
 
@@ -17,10 +20,9 @@ class CityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_city)
         setupViewModel()
+        setupObserver()
 
-        viewModel.titleBar.observe(this, Observer { title ->
-            supportActionBar!!.title = title
-        })
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -31,5 +33,24 @@ class CityActivity : AppCompatActivity() {
     private fun setupViewModel() {
         viewModelFactory = CityViewModelFactory(api)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CityViewModel::class.java)
+    }
+
+    private fun setupObserver() {
+        viewModel.titleBar.observe(this, Observer { title ->
+            supportActionBar!!.title = title
+        })
+        viewModel.cityResponse.observe(this, Observer {
+            when (it) {
+                is Resource.Loading -> {
+                    Timber.e("rajaongkir : isLoading")
+                }
+                is Resource.Success -> {
+                    Timber.e("rajaongkir : ${it.data!!.rajaongkir}")
+                }
+                is Resource.Error -> {
+                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 }
