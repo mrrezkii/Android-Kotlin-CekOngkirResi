@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.network.ApiService
 import com.kotlinmvvm.cekongkir.network.Resource
@@ -40,6 +41,9 @@ class CityActivity : AppCompatActivity() {
             supportActionBar!!.title = title
         })
         viewModel.cityResponse.observe(this, Observer {
+            if (BuildConfig.DEBUG) {
+                Timber.plant(Timber.DebugTree())
+            }
             when (it) {
                 is Resource.Loading -> {
                     Timber.e("rajaongkir : isLoading")
