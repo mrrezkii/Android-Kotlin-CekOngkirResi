@@ -19,7 +19,7 @@ class CityViewModel(
         fetchCity()
     }
 
-    private fun fetchCity() = viewModelScope.launch {
+    fun fetchCity() = viewModelScope.launch {
         cityResponse.value = Resource.Loading()
         try {
             cityResponse.value = Resource.Success(api.city().body()!!)
