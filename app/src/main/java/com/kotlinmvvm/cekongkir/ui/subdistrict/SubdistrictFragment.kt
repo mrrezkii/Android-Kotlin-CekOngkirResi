@@ -1,10 +1,11 @@
-package com.kotlinmvvm.cekongkir
+package com.kotlinmvvm.cekongkir.ui.subdistrict
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.kotlinmvvm.cekongkir.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
