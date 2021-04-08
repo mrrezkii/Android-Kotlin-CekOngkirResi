@@ -1,6 +1,7 @@
 package com.kotlinmvvm.cekongkir
 
 import android.app.Application
+import com.kotlinmvvm.cekongkir.database.persistence.CekOngkirDatabase
 import com.kotlinmvvm.cekongkir.database.preferences.CekOngkirPreference
 import com.kotlinmvvm.cekongkir.network.ApiService
 import com.kotlinmvvm.cekongkir.network.RajaOngkirEndPoint
@@ -11,6 +12,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import timber.log.Timber
 
@@ -20,14 +22,15 @@ class CekOngkirApplication : Application(), KodeinAware {
         import(androidXModule(this@CekOngkirApplication))
 
         bind() from singleton { CekOngkirPreference(instance()) }
+        bind() from singleton { CekOngkirDatabase(instance()) }
         bind<RajaOngkirEndPoint>() with singleton { ApiService.getClient() }
+
         bind() from singleton { RajaOngkirRepository(instance(), instance()) }
-        bind() from singleton { CityViewModelFactory(instance()) }
+        bind() from provider { CityViewModelFactory(instance()) }
     }
 
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
     }
-
 }

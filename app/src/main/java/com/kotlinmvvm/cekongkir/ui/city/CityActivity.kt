@@ -5,18 +5,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewbinding.BuildConfig
+import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.network.Resource
 import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import timber.log.Timber
 
 class CityActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by kodein()
-
-    private val viewModelFactory: CityViewModelFactory by instance()
+    private val cityViewModelFactory: CityViewModelFactory by instance()
     private lateinit var viewModel: CityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +24,8 @@ class CityActivity : AppCompatActivity(), KodeinAware {
         setContentView(R.layout.activity_city)
         setupViewModel()
         setupObserver()
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -32,7 +34,7 @@ class CityActivity : AppCompatActivity(), KodeinAware {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(CityViewModel::class.java)
+        viewModel = ViewModelProvider(this, cityViewModelFactory).get(CityViewModel::class.java)
     }
 
     private fun setupObserver() {
