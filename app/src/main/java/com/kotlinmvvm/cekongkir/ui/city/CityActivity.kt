@@ -7,15 +7,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.R
+import com.kotlinmvvm.cekongkir.database.preferences.CekOngkirPreference
 import com.kotlinmvvm.cekongkir.network.ApiService
+import com.kotlinmvvm.cekongkir.network.RajaOngkirRepository
 import com.kotlinmvvm.cekongkir.network.Resource
 import timber.log.Timber
 
 class CityActivity : AppCompatActivity() {
 
     private val api by lazy { ApiService.getClient() }
+    private val pref by lazy { CekOngkirPreference(this) }
+
     private lateinit var viewModelFactory: CityViewModelFactory
     private lateinit var viewModel: CityViewModel
+    private lateinit var repository: RajaOngkirRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +37,8 @@ class CityActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        viewModelFactory = CityViewModelFactory(api)
+        repository = RajaOngkirRepository(api, pref)
+        viewModelFactory = CityViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CityViewModel::class.java)
     }
 
