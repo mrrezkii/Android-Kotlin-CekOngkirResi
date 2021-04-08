@@ -24,7 +24,7 @@ class RajaOngkirRepository(
     }
 
     fun getPreferences(): List<PreferencesModel> {
-        return listOf(
+        return listOf<PreferencesModel>(
                 PreferencesModel(type = "origin", id = pref.getString(prefOriginId), name = pref.getString(prefOriginName)),
                 PreferencesModel(type = "destination", id = pref.getString(prefDestinationId), name = pref.getString(prefDestinationName))
         )

@@ -41,7 +41,7 @@ class CityViewModel(
         }
     }
 
-    fun savePreferences(type: String, id: String?, name: String) {
-        repository.savePreferences(type, id!!, name)
+    fun savePreferences(type: String, id: String, name: String) {
+        repository.savePreferences(type, id, name)
     }
 }

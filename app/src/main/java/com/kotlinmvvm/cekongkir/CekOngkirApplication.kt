@@ -1,12 +1,12 @@
 package com.kotlinmvvm.cekongkir
 
 import android.app.Application
-import com.kotlinmvvm.cekongkir.database.persistence.CekOngkirDatabase
 import com.kotlinmvvm.cekongkir.database.preferences.CekOngkirPreference
 import com.kotlinmvvm.cekongkir.network.ApiService
 import com.kotlinmvvm.cekongkir.network.RajaOngkirEndPoint
 import com.kotlinmvvm.cekongkir.network.RajaOngkirRepository
 import com.kotlinmvvm.cekongkir.ui.city.CityViewModelFactory
+import com.kotlinmvvm.cekongkir.ui.cost.CostViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -22,11 +22,11 @@ class CekOngkirApplication : Application(), KodeinAware {
         import(androidXModule(this@CekOngkirApplication))
 
         bind() from singleton { CekOngkirPreference(instance()) }
-        bind() from singleton { CekOngkirDatabase(instance()) }
         bind<RajaOngkirEndPoint>() with singleton { ApiService.getClient() }
 
         bind() from singleton { RajaOngkirRepository(instance(), instance()) }
         bind() from provider { CityViewModelFactory(instance()) }
+        bind() from provider { CostViewModelFactory(instance()) }
     }
 
     override fun onCreate() {

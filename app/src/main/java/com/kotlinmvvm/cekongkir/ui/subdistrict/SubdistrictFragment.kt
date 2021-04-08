@@ -18,12 +18,14 @@ import timber.log.Timber
 
 class SubdistrictFragment : Fragment() {
 
-    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(CityViewModel::class.java) }
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity()).get(CityViewModel::class.java)
+    }
     private lateinit var binding: FragmentSubdistrictBinding
     private lateinit var subdistrictAdapter: SubdistrictAdapter
     private val type by lazy { requireActivity().intent.getStringExtra("intent_type")!! }
-    private val cityId by lazy { requireArguments().getString("city_id") }
-    private val cityName by lazy { requireArguments().getString("city_name") }
+    private val cityId by lazy { requireArguments().getString("city_id")!! }
+    private val cityName by lazy { requireArguments().getString("city_name")!! }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,24 +47,25 @@ class SubdistrictFragment : Fragment() {
 
     private fun setupRecyclerView() {
         subdistrictAdapter = SubdistrictAdapter(
-            arrayListOf(),
-            object : SubdistrictAdapter.OnAdapterListener {
-                override fun onClick(result: SubdistrictResponse.Rajaongkir.ResultsItem) {
-                    viewModel.savePreferences(
-                        type = type,
-                        id = result.subdistrictId,
-                        name = "$cityName, ${result.subdistrictName}"
-                    )
-                }
+                arrayListOf(),
+                object : SubdistrictAdapter.OnAdapterListener {
+                    override fun onClick(result: SubdistrictResponse.Rajaongkir.ResultsItem) {
+                        viewModel.savePreferences(
+                                type = type,
+                                id = result.subdistrictId!!,
+                                name = "$cityName, ${result.subdistrictName}"
+                        )
+                        requireActivity().finish()
+                    }
 
-            })
+                })
         binding.listSubdistrict.adapter = subdistrictAdapter
     }
 
 
     private fun setupListener() {
         binding.refreshSubdistrict.setOnRefreshListener {
-            viewModel.fetchSubdistrict(cityId!!)
+            viewModel.fetchSubdistrict(cityId)
         }
     }
 
