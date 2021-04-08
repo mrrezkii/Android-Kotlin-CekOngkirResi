@@ -40,4 +40,8 @@ class CityViewModel(
             subdistrictResponse.value = Resource.Error(e.message.toString())
         }
     }
+
+    fun savePreferences(type: String, id: String?, name: String) {
+        repository.savePreferences(type, id, name)
+    }
 }

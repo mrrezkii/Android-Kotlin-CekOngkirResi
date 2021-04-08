@@ -5,30 +5,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.kotlinmvvm.cekongkir.BuildConfig
+import androidx.viewbinding.BuildConfig
 import com.kotlinmvvm.cekongkir.R
-import com.kotlinmvvm.cekongkir.database.preferences.CekOngkirPreference
-import com.kotlinmvvm.cekongkir.network.ApiService
-import com.kotlinmvvm.cekongkir.network.RajaOngkirRepository
 import com.kotlinmvvm.cekongkir.network.Resource
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 import timber.log.Timber
 
-class CityActivity : AppCompatActivity() {
+class CityActivity : AppCompatActivity(), KodeinAware {
 
-    private val api by lazy { ApiService.getClient() }
-    private val pref by lazy { CekOngkirPreference(this) }
+    override val kodein by kodein()
 
-    private lateinit var viewModelFactory: CityViewModelFactory
+    private val viewModelFactory: CityViewModelFactory by instance()
     private lateinit var viewModel: CityViewModel
-    private lateinit var repository: RajaOngkirRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_city)
         setupViewModel()
         setupObserver()
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -37,8 +32,6 @@ class CityActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        repository = RajaOngkirRepository(api, pref)
-        viewModelFactory = CityViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CityViewModel::class.java)
     }
 
