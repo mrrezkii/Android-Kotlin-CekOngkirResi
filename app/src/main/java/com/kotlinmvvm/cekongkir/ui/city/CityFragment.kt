@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.kotlinmvvm.cekongkir.BuildConfig
+import androidx.viewbinding.BuildConfig
 import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.databinding.FragmentCityBinding
 import com.kotlinmvvm.cekongkir.network.Resource
@@ -49,15 +50,16 @@ class CityFragment : Fragment() {
         binding.refreshCity.setOnRefreshListener {
             viewModel.fetchCity()
         }
-        binding.container.setOnClickListener {
-            findNavController().navigate(R.id.action_cityFragment_to_subdistrictFragment)
-        }
     }
 
     private fun setupRecyclerView() {
         cityAdapter = CityAdapter(arrayListOf(), object : CityAdapter.OnAdapterListener {
             override fun onClick(result: CityResponse.Rajaongkir.ResultsItem) {
-                TODO("Not yet implemented")
+                viewModel.fetchSubdistrict(result.cityId)
+                findNavController().navigate(
+                        R.id.action_cityFragment_to_subdistrictFragment,
+                        bundleOf("city_id" to result.cityId, "city_name" to result.cityName)
+                )
             }
         })
         binding.listCity.adapter = cityAdapter
