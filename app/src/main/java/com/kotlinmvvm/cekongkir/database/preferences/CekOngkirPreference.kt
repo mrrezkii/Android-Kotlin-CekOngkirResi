@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 
-private const val prefName = "LazdayCekOngkir.pref"
+private const val prefName = "CekOngkirResi .pref"
 
 class CekOngkirPreference(context: Context) {
 
