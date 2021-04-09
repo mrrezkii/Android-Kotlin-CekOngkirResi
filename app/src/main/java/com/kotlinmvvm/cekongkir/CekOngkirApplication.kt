@@ -7,6 +7,7 @@ import com.kotlinmvvm.cekongkir.network.RajaOngkirEndPoint
 import com.kotlinmvvm.cekongkir.network.RajaOngkirRepository
 import com.kotlinmvvm.cekongkir.ui.city.CityViewModelFactory
 import com.kotlinmvvm.cekongkir.ui.cost.CostViewModelFactory
+import com.kotlinmvvm.cekongkir.ui.tracking.TrackingViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -27,6 +28,7 @@ class CekOngkirApplication : Application(), KodeinAware {
         bind() from singleton { RajaOngkirRepository(instance(), instance()) }
         bind() from provider { CityViewModelFactory(instance()) }
         bind() from provider { CostViewModelFactory(instance()) }
+        bind() from provider { TrackingViewModelFactory(instance()) }
     }
 
     override fun onCreate() {
