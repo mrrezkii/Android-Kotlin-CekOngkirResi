@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.databinding.FragmentCostBinding
 import com.kotlinmvvm.cekongkir.network.Resource
+import com.kotlinmvvm.cekongkir.network.response.CostResponse
 import com.kotlinmvvm.cekongkir.ui.city.CityActivity
 import timber.log.Timber
 
@@ -96,6 +97,7 @@ class CostFragment : Fragment() {
                 is Resource.Success -> {
                     loadingCost(false)
                     Timber.e("costResponse : ${it.data!!.rajaongkir?.results}")
+                    binding.listCost.adapter = CostAdapter(it.data.rajaongkir?.results as List<CostResponse.Rajaongkir.ResultsItem>)
 //                    cityAdapter.setData(it.data.rajaongkir!!.results as List<CityResponse.Rajaongkir.ResultsItem>)
                 }
                 is Resource.Error -> {
