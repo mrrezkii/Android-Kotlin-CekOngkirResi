@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.databinding.FragmentCostBinding
+import com.kotlinmvvm.cekongkir.network.Resource
 import com.kotlinmvvm.cekongkir.ui.city.CityActivity
 import timber.log.Timber
 
@@ -29,6 +32,7 @@ class CostFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         viewModel.getPreferences()
+        loadingCost(false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,6 +51,20 @@ class CostFragment : Fragment() {
             startActivity(
                     Intent(requireActivity(), CityActivity::class.java)
                             .putExtra("intent_type", "destination"))
+        }
+        binding.buttonCost.setOnClickListener {
+            if (originSubdistricId.isNullOrEmpty() || destinationSubdistricId.isNullOrEmpty()) {
+                Toast.makeText(requireActivity(), "Lengkapi data pencarian", Toast.LENGTH_LONG).show()
+            } else {
+                viewModel.fetchCost(
+                        origin = originSubdistricId!!,
+                        originType = "subdistrict",
+                        destination = destinationSubdistricId!!,
+                        destinationType = "subdistrict",
+                        weight = "1000",
+                        courier = "sicepat:jnt:pos"
+                )
+            }
         }
     }
 
@@ -67,11 +85,30 @@ class CostFragment : Fragment() {
                         binding.editDestination.setText(it.name)
                     }
                 }
-
-
             }
-
         })
+        viewModel.costResponse.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Loading -> {
+                    Timber.e("costResponse : isLoading")
+                    loadingCost(true)
+                }
+                is Resource.Success -> {
+                    loadingCost(false)
+                    Timber.e("costResponse : ${it.data!!.rajaongkir?.results}")
+//                    cityAdapter.setData(it.data.rajaongkir!!.results as List<CityResponse.Rajaongkir.ResultsItem>)
+                }
+                is Resource.Error -> {
+                    loadingCost(false)
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+    }
+
+    private fun loadingCost(loading: Boolean) {
+        if (loading) binding.progressCost.visibility = View.VISIBLE
+        else binding.progressCost.visibility = View.GONE
     }
 
 

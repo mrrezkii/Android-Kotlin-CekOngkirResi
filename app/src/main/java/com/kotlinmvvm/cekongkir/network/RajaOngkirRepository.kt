@@ -4,7 +4,7 @@ import com.kotlinmvvm.cekongkir.database.preferences.*
 
 class RajaOngkirRepository(
         private val api: RajaOngkirEndPoint,
-        private val pref: CekOngkirPreference
+        private val pref: CekOngkirPreference,
 ) {
     suspend fun fetchCity() = api.city()
 
@@ -29,4 +29,13 @@ class RajaOngkirRepository(
                 PreferencesModel(type = "destination", id = pref.getString(prefDestinationId), name = pref.getString(prefDestinationName))
         )
     }
+
+    suspend fun fetchCost(
+            origin: String,
+            originType: String,
+            destination: String,
+            destinationType: String,
+            weight: String,
+            courier: String
+    ) = api.cost(origin, originType, destination, destinationType, weight, courier)
 }
