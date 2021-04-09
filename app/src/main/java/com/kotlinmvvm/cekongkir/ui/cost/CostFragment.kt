@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kotlinmvvm.cekongkir.BuildConfig
 import com.kotlinmvvm.cekongkir.databinding.FragmentCostBinding
@@ -27,6 +26,11 @@ class CostFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getPreferences()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListerner()
@@ -36,12 +40,12 @@ class CostFragment : Fragment() {
     private fun setupListerner() {
         binding.editOrigin.setOnClickListener {
             startActivity(
-                    Intent(context, CityActivity::class.java)
+                    Intent(requireActivity(), CityActivity::class.java)
                             .putExtra("intent_type", "origin"))
         }
         binding.editDestination.setOnClickListener {
             startActivity(
-                    Intent(context, CityActivity::class.java)
+                    Intent(requireActivity(), CityActivity::class.java)
                             .putExtra("intent_type", "destination"))
         }
     }
@@ -50,7 +54,7 @@ class CostFragment : Fragment() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        viewModel.preferences.observe(viewLifecycleOwner, Observer { preferences ->
+        viewModel.preferences.observe(viewLifecycleOwner, { preferences ->
             preferences.forEach {
                 Timber.d("preferencesList: $it")
                 when (it.type) {
