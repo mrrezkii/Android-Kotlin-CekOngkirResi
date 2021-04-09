@@ -38,4 +38,9 @@ class RajaOngkirRepository(
             weight: String,
             courier: String
     ) = api.cost(origin, originType, destination, destinationType, weight, courier)
+
+    suspend fun fetchWaybill(
+            waybill: String,
+            courier: String,
+    ) = api.waybill(waybill, courier)
 }
