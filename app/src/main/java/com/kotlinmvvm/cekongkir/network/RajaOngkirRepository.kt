@@ -1,10 +1,12 @@
 package com.kotlinmvvm.cekongkir.network
 
+import com.kotlinmvvm.cekongkir.database.persistence.CekOngkirDatabase
 import com.kotlinmvvm.cekongkir.database.preferences.*
 
 class RajaOngkirRepository(
         private val api: RajaOngkirEndPoint,
         private val pref: CekOngkirPreference,
+        private val db: CekOngkirDatabase
 ) {
     suspend fun fetchCity() = api.city()
 

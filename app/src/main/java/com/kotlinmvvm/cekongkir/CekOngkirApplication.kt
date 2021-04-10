@@ -1,6 +1,7 @@
 package com.kotlinmvvm.cekongkir
 
 import android.app.Application
+import com.kotlinmvvm.cekongkir.database.persistence.CekOngkirDatabase
 import com.kotlinmvvm.cekongkir.database.preferences.CekOngkirPreference
 import com.kotlinmvvm.cekongkir.network.ApiService
 import com.kotlinmvvm.cekongkir.network.RajaOngkirEndPoint
@@ -23,9 +24,10 @@ class CekOngkirApplication : Application(), KodeinAware {
         import(androidXModule(this@CekOngkirApplication))
 
         bind() from singleton { CekOngkirPreference(instance()) }
+        bind() from singleton { CekOngkirDatabase(instance()) }
         bind<RajaOngkirEndPoint>() with singleton { ApiService.getClient() }
 
-        bind() from singleton { RajaOngkirRepository(instance(), instance()) }
+        bind() from singleton { RajaOngkirRepository(instance(), instance(), instance()) }
         bind() from provider { CityViewModelFactory(instance()) }
         bind() from provider { CostViewModelFactory(instance()) }
         bind() from provider { TrackingViewModelFactory(instance()) }
