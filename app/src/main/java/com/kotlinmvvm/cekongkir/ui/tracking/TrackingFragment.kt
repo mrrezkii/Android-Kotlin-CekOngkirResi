@@ -14,6 +14,7 @@ import com.kotlinmvvm.cekongkir.databinding.FragmentTrackingBinding
 class TrackingFragment : Fragment() {
 
     private lateinit var binding: FragmentTrackingBinding
+    private val isTracking by lazy { requireActivity().intent.getBooleanExtra("is_tracking", false) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,6 +28,15 @@ class TrackingFragment : Fragment() {
     }
 
     private fun setupListener() {
+        if (isTracking) {
+            findNavController().navigate(
+                    R.id.action_trackingFragment_to_trackingResultFragment,
+                    bundleOf(
+                            "waybill" to requireActivity().intent.getStringExtra("is_waybill"),
+                            "courier" to requireActivity().intent.getStringExtra("is_courier"),
+                    )
+            )
+        }
         val courierAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.courier, android.R.layout.simple_spinner_item)
         courierAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.listCourier.adapter = courierAdapter

@@ -22,7 +22,12 @@ class WaybillAdapter(
         holder.binding.textCourier.text = waybill.courier
         holder.binding.textStatus.text = waybill.status
         holder.binding.container.setOnClickListener {
-            listerner.onClick(waybill)
+            listerner.onDetail(waybill)
+        }
+        holder.binding.container.setOnLongClickListener {
+            listerner.onDelete(waybill)
+            true
+
         }
 
     }
@@ -33,7 +38,8 @@ class WaybillAdapter(
     class ViewHolder(val binding: AdapterWaybillBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface OnAdapterListener {
-        fun onClick(result: WaybillEntity)
+        fun onDetail(result: WaybillEntity)
+        fun onDelete(result: WaybillEntity)
     }
 
     fun setData(data: List<WaybillEntity>) {

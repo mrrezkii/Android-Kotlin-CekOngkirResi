@@ -1,10 +1,12 @@
 package com.kotlinmvvm.cekongkir.ui.waybill
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,8 +39,28 @@ class WaybillFragment : Fragment() {
 
     private fun setupRecyclerView() {
         waybillAdapter = WaybillAdapter(arrayListOf(), object : WaybillAdapter.OnAdapterListener {
-            override fun onClick(result: WaybillEntity) {
+            override fun onDetail(result: WaybillEntity) {
+                startActivity(Intent(requireActivity(), TrackingActivity::class.java)
+                        .putExtra("is_tracking", true)
+                        .putExtra("is_waybill", result.waybill)
+                        .putExtra("is_courier", result.courier)
+                )
+            }
 
+            override fun onDelete(result: WaybillEntity) {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.apply {
+                    setTitle("HAPUS RESI")
+                    setMessage("Hapus No. Resi ${result.waybill}?")
+                    setPositiveButton("Hapus") { _, _ ->
+                        viewModel.deleteWaybill(result)
+                        Toast.makeText(requireActivity(), "Resi dihapus", Toast.LENGTH_LONG).show()
+                    }
+                    setNegativeButton("Batal") { _, _ ->
+
+                    }
+                    show()
+                }
             }
 
         })

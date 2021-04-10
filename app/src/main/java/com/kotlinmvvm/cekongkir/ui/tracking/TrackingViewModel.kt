@@ -37,4 +37,8 @@ class TrackingViewModel(
                 )
         )
     }
+
+    fun deleteWaybill(waybill: WaybillEntity) = viewModelScope.launch {
+        repository.deleteWaybill(waybill)
+    }
 }

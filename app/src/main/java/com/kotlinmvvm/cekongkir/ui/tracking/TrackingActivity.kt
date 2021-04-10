@@ -31,8 +31,8 @@ class TrackingActivity : AppCompatActivity(), KodeinAware {
         viewModel = ViewModelProvider(this, trackingViewModelFactory).get(TrackingViewModel::class.java)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return super.onSupportNavigateUp()
+    override fun onBackPressed() {
+        if (intent.getBooleanExtra("is_tracking", false)) finish()
+        else super.onBackPressed()
     }
 }
