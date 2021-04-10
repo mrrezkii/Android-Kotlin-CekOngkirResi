@@ -6,10 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.BuildConfig
 import com.kotlinmvvm.cekongkir.databinding.FragmentWaybillBinding
 import com.kotlinmvvm.cekongkir.ui.tracking.TrackingActivity
+import com.kotlinmvvm.cekongkir.ui.tracking.TrackingViewModel
+import timber.log.Timber
 
 class WaybillFragment : Fragment() {
+
+    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(TrackingViewModel::class.java) }
 
     private lateinit var binding: FragmentWaybillBinding
 
@@ -22,11 +29,21 @@ class WaybillFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListener()
+        setupObserver()
     }
 
     private fun setupListener() {
         binding.editWaybill.setOnClickListener {
             startActivity(Intent(requireActivity(), TrackingActivity::class.java))
         }
+    }
+
+    private fun setupObserver() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+        viewModel.waybill.observe(viewLifecycleOwner, Observer {
+            Timber.e("waybill : $it")
+        })
     }
 }

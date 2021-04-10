@@ -1,6 +1,7 @@
 package com.kotlinmvvm.cekongkir.network
 
 import com.kotlinmvvm.cekongkir.database.persistence.CekOngkirDatabase
+import com.kotlinmvvm.cekongkir.database.persistence.WaybillEntity
 import com.kotlinmvvm.cekongkir.database.preferences.*
 
 class RajaOngkirRepository(
@@ -45,4 +46,10 @@ class RajaOngkirRepository(
             waybill: String,
             courier: String,
     ) = api.waybill(waybill, courier)
+
+    suspend fun saveWaybill(waybillEntity: WaybillEntity) {
+        db.waybillDao().insert(waybillEntity)
+    }
+
+    fun getWaybill() = db.waybillDao().select()
 }
