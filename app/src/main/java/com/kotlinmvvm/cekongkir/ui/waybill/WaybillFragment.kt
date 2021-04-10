@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.BuildConfig
+import com.kotlinmvvm.cekongkir.database.persistence.WaybillEntity
 import com.kotlinmvvm.cekongkir.databinding.FragmentWaybillBinding
 import com.kotlinmvvm.cekongkir.ui.tracking.TrackingActivity
 import com.kotlinmvvm.cekongkir.ui.tracking.TrackingViewModel
@@ -19,6 +20,7 @@ class WaybillFragment : Fragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(TrackingViewModel::class.java) }
 
     private lateinit var binding: FragmentWaybillBinding
+    private lateinit var waybillAdapter: WaybillAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,8 +30,19 @@ class WaybillFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
         setupListener()
         setupObserver()
+    }
+
+    private fun setupRecyclerView() {
+        waybillAdapter = WaybillAdapter(arrayListOf(), object : WaybillAdapter.OnAdapterListener {
+            override fun onClick(result: WaybillEntity) {
+
+            }
+
+        })
+        binding.listWaybill.adapter = waybillAdapter
     }
 
     private fun setupListener() {
@@ -44,6 +57,7 @@ class WaybillFragment : Fragment() {
         }
         viewModel.waybill.observe(viewLifecycleOwner, Observer {
             Timber.e("waybill : $it")
+            waybillAdapter.setData(it)
         })
     }
 }
