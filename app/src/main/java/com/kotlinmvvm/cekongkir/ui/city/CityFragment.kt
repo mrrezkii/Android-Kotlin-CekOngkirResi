@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.databinding.FragmentCityBinding
 import com.kotlinmvvm.cekongkir.network.Resource
 import com.kotlinmvvm.cekongkir.network.response.CityResponse
+import com.kotlinmvvm.cekongkir.utils.showToast
 import timber.log.Timber
 
 class CityFragment : Fragment() {
@@ -82,7 +82,7 @@ class CityFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     binding.refreshCity.isRefreshing = false
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                    showToast("Lengkapi data pencarian")
                 }
             }
         })

@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.BuildConfig
+import com.kotlinmvvm.cekongkir.R
 import com.kotlinmvvm.cekongkir.databinding.FragmentSubdistrictBinding
 import com.kotlinmvvm.cekongkir.network.Resource
 import com.kotlinmvvm.cekongkir.network.response.SubdistrictResponse
 import com.kotlinmvvm.cekongkir.ui.city.CityViewModel
+import com.kotlinmvvm.cekongkir.utils.showToast
+import com.kotlinmvvm.cekongkir.utils.swipeHide
+import com.kotlinmvvm.cekongkir.utils.swipeShow
 import timber.log.Timber
 
 
@@ -77,16 +80,16 @@ class SubdistrictFragment : Fragment() {
             when (it) {
                 is Resource.Loading -> {
                     Timber.e("subdistrictResponse : isLoading")
-                    binding.refreshSubdistrict.isRefreshing = true
+                    binding.refreshSubdistrict.swipeShow()
                 }
                 is Resource.Success -> {
-                    binding.refreshSubdistrict.isRefreshing = false
+                    binding.refreshSubdistrict.swipeHide()
                     Timber.e("subdistrictResponse : ${it.data!!.rajaongkir!!.results}")
                     subdistrictAdapter.setData(it.data.rajaongkir!!.results as List<SubdistrictResponse.Rajaongkir.ResultsItem>)
                 }
                 is Resource.Error -> {
-                    binding.refreshSubdistrict.isRefreshing = false
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                    binding.refreshSubdistrict.swipeHide()
+                    requireActivity().showToast(resources.getString(R.string.message_error))
                 }
             }
         })

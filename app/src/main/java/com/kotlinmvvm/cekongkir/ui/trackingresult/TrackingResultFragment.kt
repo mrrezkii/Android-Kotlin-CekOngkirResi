@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +13,10 @@ import com.kotlinmvvm.cekongkir.databinding.FragmentTrackingResultBinding
 import com.kotlinmvvm.cekongkir.network.Resource
 import com.kotlinmvvm.cekongkir.network.response.WaybillResponse
 import com.kotlinmvvm.cekongkir.ui.tracking.TrackingViewModel
+import com.kotlinmvvm.cekongkir.utils.swipeHide
+import com.kotlinmvvm.cekongkir.utils.swipeShow
+import com.kotlinmvvm.cekongkir.utils.viewHide
+import com.kotlinmvvm.cekongkir.utils.viewShow
 import timber.log.Timber
 
 class TrackingResultFragment : Fragment() {
@@ -33,11 +36,18 @@ class TrackingResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObserver()
+        setupListener()
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.fetchWaybill(waybill!!, courier!!)
+    }
+
+    private fun setupListener() {
+        binding.refreshWaybill.setOnRefreshListener {
+            viewModel.fetchWaybill(waybill!!, courier!!)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -47,31 +57,25 @@ class TrackingResultFragment : Fragment() {
         }
         viewModel.waybillResponse.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Loading -> loadingWaybill(true)
+                is Resource.Loading -> {
+                    binding.refreshWaybill.swipeShow()
+                    binding.container.viewHide()
+                }
                 is Resource.Success -> {
-                    loadingWaybill(false)
+                    binding.refreshWaybill.swipeHide()
+                    binding.container.viewShow()
                     Timber.e("waybill : ${it.data!!.rajaongkir!!.result}")
                     val data = it.data.rajaongkir!!.result
                     binding.textStatus.text = data!!.deliveryStatus!!.status
                     binding.textReceiver.text = data.deliveryStatus!!.podReceiver
-                    binding.textDate.text = "${data.deliveryStatus!!.podDate} ${data.deliveryStatus!!.podTime}"
+                    binding.textDate.text = "${data.deliveryStatus.podDate} ${data.deliveryStatus.podTime}"
                     binding.listManifest.adapter = TrackingAdapter(data.manifest as List<WaybillResponse.Rajaongkir.Result.ManifestItem>)
                 }
                 is Resource.Error -> {
-                    loadingWaybill(false)
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                    binding.refreshWaybill.swipeHide()
+                    binding.container.viewShow()
                 }
             }
         })
-    }
-
-    private fun loadingWaybill(loading: Boolean) {
-        if (loading) {
-            binding.refreshWaybill.isRefreshing = true
-            binding.container.visibility = View.GONE
-        } else {
-            binding.refreshWaybill.isRefreshing = false
-            binding.container.visibility = View.VISIBLE
-        }
     }
 }

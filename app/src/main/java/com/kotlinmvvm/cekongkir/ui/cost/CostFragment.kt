@@ -14,6 +14,8 @@ import com.kotlinmvvm.cekongkir.databinding.FragmentCostBinding
 import com.kotlinmvvm.cekongkir.network.Resource
 import com.kotlinmvvm.cekongkir.network.response.CostResponse
 import com.kotlinmvvm.cekongkir.ui.city.CityActivity
+import com.kotlinmvvm.cekongkir.utils.viewHide
+import com.kotlinmvvm.cekongkir.utils.viewShow
 import timber.log.Timber
 
 class CostFragment : Fragment() {
@@ -92,25 +94,23 @@ class CostFragment : Fragment() {
             when (it) {
                 is Resource.Loading -> {
                     Timber.e("costResponse : isLoading")
-                    loadingCost(true)
+                    binding.progressCost.viewShow()
                 }
                 is Resource.Success -> {
-                    loadingCost(false)
+                    binding.progressCost.viewHide()
                     Timber.e("costResponse : ${it.data!!.rajaongkir?.results}")
                     binding.listCost.adapter = CostAdapter(it.data.rajaongkir?.results as List<CostResponse.Rajaongkir.ResultsItem>)
-//                    cityAdapter.setData(it.data.rajaongkir!!.results as List<CityResponse.Rajaongkir.ResultsItem>)
                 }
                 is Resource.Error -> {
-                    loadingCost(false)
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                    binding.progressCost.viewHide()
                 }
             }
         })
     }
 
     private fun loadingCost(loading: Boolean) {
-        if (loading) binding.progressCost.visibility = View.VISIBLE
-        else binding.progressCost.visibility = View.GONE
+        if (loading) binding.progressCost.viewShow()
+        else binding.progressCost.viewHide()
     }
 
 
